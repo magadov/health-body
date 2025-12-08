@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"fmt"
 	"healthy_body/internal/models"
 	"log/slog"
@@ -12,7 +13,7 @@ type UserRepository interface {
 	Create(req *models.User) error
 	GetAllUser() ([]models.User, error)
 	GetUserByID(id uint) (*models.User, error)
-	Update(user *models.User, id uint) error
+	Update(user *models.User) error
 	Delete(id uint) error
 }
 
@@ -80,27 +81,15 @@ func (r *gormUserRepository) GetUserByID(id uint) (*models.User, error) {
 	return &user, nil
 }
 
-func (r *gormUserRepository) Update(req *models.User, id uint) error {
+func (r *gormUserRepository) Update(req *models.User) error {
 
-	newUser := models.User{
-		Name:    req.Name,
-		Balance: req.Balance,
+	if req == nil {
+		r.log.Error("error in Update function exercise_plan_item_repository.go")
+		return errors.New("error update in db")
 	}
-
-	result := r.db.Model(&models.User{}).Where("id = ?", id).Updates(&newUser)
-
-	if result.Error != nil {
-		r.log.Error("Ошибка при обновлении пользователя по ID",
-			"id", id,
-			"имя", req.Name,
-			"баланс", req.Balance,
-			"error", result.Error.Error(),
-		)
-		return fmt.Errorf("ошибка при обновлении пользователя по %d", id)
-	}
-
 	r.log.Info("Пользователь успешно обновлен")
-	return nil
+
+	return r.db.Save(req).Error
 }
 
 func (r *gormUserRepository) Delete(id uint) error {

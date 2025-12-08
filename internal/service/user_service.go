@@ -1,1 +1,174 @@
 package service
+
+import (
+	"fmt"
+	"healthy_body/internal/models"
+	"healthy_body/internal/repository"
+	"log/slog"
+)
+
+type UserService interface {
+	CreateUser(req models.CreateUserRequest) (*models.User, error)
+	GetAllUsers() ([]models.User, error)
+	GetUserByID(id uint) (*models.User, error)
+	UpdateUser(id uint, req models.UpdateUserRequest) (*models.User, error)
+	Delete(id uint) error
+}
+
+type userService struct {
+	userRepo repository.UserRepository
+	log      *slog.Logger
+}
+
+func NewUserService(userRepo repository.UserRepository, log *slog.Logger) UserService {
+	return &userService{
+		userRepo: userRepo,
+		log:      log,
+	}
+}
+
+func (s *userService) CreateUser(req models.CreateUserRequest) (*models.User, error) {
+	if len(req.Name) < 2 {
+		s.log.Warn("имя пользователя слишком короткое",
+			"имя", req.Name,
+			"минимальное количество символов имени", 2,
+		)
+		return nil, fmt.Errorf("имя должно содержать минимум 2 символа")
+
+	}
+
+	if req.Balance < 0 {
+		s.log.Warn("Баланс не может быть отрицательным")
+		return nil, fmt.Errorf("баланс не может быть отрицательным")
+	}
+
+	newUser := &models.User{
+		Name:    req.Name,
+		Balance: req.Balance,
+	}
+
+	if err := s.userRepo.Create(newUser); err != nil {
+		s.log.Error("Ошибка при создании пользователя",
+			"имя", req.Name,
+			"баланс", req.Balance,
+			"error", err.Error())
+
+		return nil, fmt.Errorf("ошибка при создании пользователя: %w", err)
+	}
+
+	s.log.Info("Пользователь создан",
+		"id", newUser.ID,
+		"имя", req.Name,
+		"баланс", req.Balance)
+
+	return newUser, nil
+
+}
+
+func (s *userService) GetAllUsers() ([]models.User, error) {
+
+	result, err := s.userRepo.GetAllUser()
+	if err != nil {
+		s.log.Error("Ошибка при выводе пользователей",
+			"error", err.Error())
+		return nil, fmt.Errorf("ошибка при выводе пользователей: %w", err)
+	}
+
+	s.log.Info("Пользователи получены",
+		"количество пользователей", len(result))
+
+	return result, nil
+}
+
+func (s *userService) GetUserByID(id uint) (*models.User, error) {
+
+	if id == 0 {
+		s.log.Warn("id не указан")
+		return nil, fmt.Errorf("id не указан")
+	}
+
+	result, err := s.userRepo.GetUserByID(id)
+
+	if err != nil {
+		s.log.Error("Ошибка при выводе пользователя",
+			"id", id,
+			"error", err.Error())
+		return nil, fmt.Errorf("ошибка при выводе пользователя: %w", err)
+	}
+
+	s.log.Info("Пользователь найден",
+		"id", result.ID,
+		"имя", result.Name,
+		"баланс", result.Balance,
+	)
+
+	return result, nil
+}
+
+func (s *userService) UpdateUser(id uint, req models.UpdateUserRequest) (*models.User, error) {
+
+	if req.Name == nil && req.Balance == nil {
+		s.log.Warn("Нет полей для обновления", "id", id)
+		return nil, fmt.Errorf("не указаны поля для обновления")
+	}
+
+	if req.Name != nil {
+		if len(*req.Name) < 2 {
+			s.log.Warn("Короткое имя при обновлении",
+				"id", id,
+				"name", *req.Name)
+			return nil, fmt.Errorf("имя должно содержать минимум 2 символа")
+		}
+	}
+
+	if req.Balance != nil {
+		balance := *req.Balance
+		if balance < 0 {
+			s.log.Warn("Отрицательный баланс при обновлении",
+				"id", id,
+				"balance", balance,
+			)
+			return nil, fmt.Errorf("баланс не может быть отрицательным")
+		}
+	}
+
+	user, err := s.GetUserByID(id)
+
+	if err != nil {
+		s.log.Error("Ошибка при поиске пользователя",
+			"error", err.Error())
+		return nil, fmt.Errorf("ошибка при поиске пользователя %w", err)
+	}
+
+	if req.Name != nil {
+		user.Name = *req.Name
+	}
+	if req.Balance != nil {
+		user.Balance = *req.Balance
+	}
+
+	if err := s.userRepo.Update(user); err != nil {
+		s.log.Error("Ошибка при обновлении пользователя",
+			"error", err.Error())
+		return nil, fmt.Errorf("ошибка при обновлении пользователя %w", err)
+	}
+
+	s.log.Info("Пользователь обновлен",
+		"id", id,
+		"имя", req.Name,
+		"баланс", req.Balance,
+	)
+	return user, nil
+}
+
+func (s *userService) Delete(id uint) error {
+
+	if err := s.userRepo.Delete(id); err != nil {
+		s.log.Error("Ошибка при удалении пользователя",
+			"ID", id,
+			"error", err)
+		return fmt.Errorf("ошибка при удалении пользователя %w", err)
+	}
+
+	return nil
+}
