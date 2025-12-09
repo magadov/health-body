@@ -11,8 +11,9 @@ func RegisterRoutes(
 	router *gin.Engine,
 	log *slog.Logger,
 	category service.CategoryServices,
-	plan  service.ExercisePlanServices,
-){
+	plan service.ExercisePlanServices,
+	user service.UserService,
+) {
 
 	categoryHandler := NewCategoryHandler(category, log)
 	planHandler := NewExercisePlanHandler(plan,log)
@@ -21,3 +22,4 @@ func RegisterRoutes(
 	planHandler.RegisterRoutes(router)
 	bmiHand.RegisterRoutes(router)
 }
+
