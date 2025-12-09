@@ -1,7 +1,9 @@
 package models
 
+import "gorm.io/gorm"
+
 type MealPlanItem struct {
-	ID         uint      `json:"id" gorm:"primaryKey;autoIncrement"`
+	gorm.Model
 	Name       string    `json:"name"`
 	Calories   float64   `json:"calories"`
 	Protein    float64   `json:"protein"`
