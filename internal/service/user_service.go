@@ -330,7 +330,6 @@ func (s *userService) Payment(userID uint, categoryID uint) error {
 		if err := s.notifier.SendPaymentSuccess(&user, &category); err != nil {
 			s.log.Error("не удалось отправить уведомление", "err", err)
 		}
-
 		return nil
 	})
 	return err
