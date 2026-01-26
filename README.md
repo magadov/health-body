@@ -8,12 +8,12 @@ Backend API для платформы здорового образа жизни
 
 ## Стек технологий
 
-- **Go 1.25.1** - язык программирования
-- **Gin** - веб-фреймворк
-- **GORM** - ORM для работы с базой данных
-- **PostgreSQL** - база данных
-- **Swagger** - документация API
-- **gomail** - отправка email уведомлений
+![Go](https://img.shields.io/badge/Go-1.25.1-00ADD8?style=for-the-badge&logo=go&logoColor=white)
+![Gin](https://img.shields.io/badge/Gin-Web%20Framework-00ADD8?style=for-the-badge&logo=go&logoColor=white)
+![GORM](https://img.shields.io/badge/GORM-ORM-00ADD8?style=for-the-badge&logo=go&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-API%20Docs-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
+![gomail](https://img.shields.io/badge/gomail-Email-FF6B6B?style=for-the-badge)
 
 ## Архитектура
 
