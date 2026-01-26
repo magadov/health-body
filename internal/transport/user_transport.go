@@ -19,17 +19,6 @@ func NewUserHandler(user service.UserService, log *slog.Logger) *UserHandler {
 	return &UserHandler{user: user, log: log}
 }
 
-// Create godoc
-// @Summary Создать пользователя
-// @Description Создает нового пользователя
-// @Tags User
-// @Accept json
-// @Produce json
-// @Param user body models.CreateUserRequest true "Данные пользователя"
-// @Success 201 {object} map[string]interface{}
-// @Failure 400 {object} map[string]string
-// @Failure 500 {object} map[string]string
-// @Router /user/ [post]
 func (h *UserHandler) Create(c *gin.Context) {
 	var user models.CreateUserRequest
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -49,14 +38,6 @@ func (h *UserHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "пользователь создан", "users": result})
 }
 
-// GetAllUser godoc
-// @Summary Получить всех пользователей
-// @Description Возвращает список всех пользователей
-// @Tags User
-// @Produce json
-// @Success 200 {array} map[string]interface{}
-// @Failure 500 {object} map[string]string
-// @Router /user/ [get]
 func (h *UserHandler) GetAllUser(c *gin.Context) {
 	result, err := h.user.GetAllUsers()
 	if err != nil {
@@ -69,16 +50,6 @@ func (h *UserHandler) GetAllUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"users": result, "total": len(result)})
 }
 
-// GetUserByID godoc
-// @Summary Получить пользователя по ID
-// @Description Возвращает пользователя по указанному ID
-// @Tags User
-// @Produce json
-// @Param id path int true "ID пользователя"
-// @Success 200 {object} map[string]interface{}
-// @Failure 400 {object} map[string]string
-// @Failure 500 {object} map[string]string
-// @Router /user/{id} [get]
 func (h *UserHandler) GetUserByID(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
@@ -99,17 +70,6 @@ func (h *UserHandler) GetUserByID(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
-// Update godoc
-// @Summary Обновить пользователя
-// @Description Обновляет данные пользователя по ID
-// @Tags User
-// @Accept json
-// @Produce json
-// @Param id path int true "ID пользователя"
-// @Param user body models.UpdateUserRequest true "Данные для обновления"
-// @Success 200 {object} map[string]interface{}
-// @Failure 400 {object} map[string]string
-// @Router /user/{id} [patch]
 func (h *UserHandler) Update(c *gin.Context) {
 	var req models.UpdateUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -137,15 +97,6 @@ func (h *UserHandler) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
-// Delete godoc
-// @Summary Удалить пользователя
-// @Description Удаляет пользователя по ID
-// @Tags User
-// @Produce json
-// @Param id path int true "ID пользователя"
-// @Success 200 {object} map[string]string
-// @Failure 400 {object} map[string]string
-// @Router /user/{id} [delete]
 func (h *UserHandler) Delete(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
@@ -165,16 +116,6 @@ func (h *UserHandler) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "пользователь удален"})
 }
 
-// Payment godoc
-// @Summary Оплата пользователем
-// @Description Пользователь оплачивает выбранную категорию
-// @Tags User
-// @Produce json
-// @Param userID path int true "ID пользователя"
-// @Param categoryID path int true "ID категории"
-// @Success 200 {object} map[string]string
-// @Failure 400 {object} map[string]string
-// @Router /user/payment/{userID}/{categoryID} [post]
 func (h *UserHandler) Payment(c *gin.Context) {
 	userIDstr := c.Param("userID")
 	categoryIDstr := c.Param("categoryID")
@@ -214,17 +155,6 @@ func (h *UserHandler) Payment(c *gin.Context) {
 	})
 }
 
-// PaymentToAnother godoc
-// @Summary Оплата другому пользователю
-// @Description Пользователь оплачивает категорию другому пользователю
-// @Tags User
-// @Produce json
-// @Param userID path int true "ID пользователя"
-// @Param categoryID path int true "ID категории"
-// @Param secondUserID path int true "ID второго пользователя"
-// @Success 200 {object} map[string]string
-// @Failure 400 {object} map[string]string
-// @Router /user/present/{userID}/{categoryID}/{secondUserID} [post]
 func (h *UserHandler) PaymentToAnother(c *gin.Context) {
 	userIDstr := c.Param("userID")
 	categoryIDstr := c.Param("categoryID")
@@ -275,15 +205,6 @@ func (h *UserHandler) PaymentToAnother(c *gin.Context) {
 	})
 }
 
-// GetUserWithPlan godoc
-// @Summary Получить пользователя с планом питания
-// @Description Возвращает пользователя вместе с его планом питания
-// @Tags User
-// @Produce json
-// @Param id path int true "ID пользователя"
-// @Success 200 {object} map[string]interface{}
-// @Failure 400 {object} map[string]string
-// @Router /user/plan/{id} [get]
 func (h *UserHandler) GetUserWithPlan(c *gin.Context) {
 	idStr := c.Param("id")
 
@@ -310,15 +231,6 @@ func (h *UserHandler) GetUserWithPlan(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, user)
 }
 
-// GetUserCategory godoc
-// @Summary Получить категорию/планы пользователя
-// @Description Возвращает пользователя с предзагруженными планами и категориями
-// @Tags User
-// @Produce json
-// @Param id path int true "ID пользователя"
-// @Success 200 {object} map[string]interface{}
-// @Failure 400 {object} map[string]string
-// @Router /user/userplans/{id} [get]
 func (h *UserHandler) GetUserCategory(c *gin.Context) {
 	idStr := c.Param("id")
 	userID, err := strconv.ParseUint(idStr, 10, 64)
@@ -343,15 +255,6 @@ func (h *UserHandler) GetUserCategory(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, user)
 }
 
-// GetUserSubs godoc
-// @Summary Получить подписки пользователя
-// @Description Возвращает все подписки пользователя
-// @Tags User
-// @Produce json
-// @Param userID path int true "ID пользователя"
-// @Success 200 {object} map[string]interface{}
-// @Failure 400 {object} map[string]string
-// @Router /user/usersub/{userID} [get]
 func (h *UserHandler) GetUserSubs(c *gin.Context) {
 	userIDstr := c.Param("userID")
 	userID, err := strconv.ParseUint(userIDstr, 10, 64)
@@ -376,16 +279,6 @@ func (h *UserHandler) GetUserSubs(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, user)
 }
 
-// SubPayment godoc
-// @Summary Оплата подписки пользователем
-// @Description Пользователь оплачивает выбранную подписку
-// @Tags User
-// @Produce json
-// @Param userID path int true "ID пользователя"
-// @Param subID path int true "ID подписки"
-// @Success 200 {object} map[string]string
-// @Failure 400 {object} map[string]string
-// @Router /user/sub/{userID}/{subID} [post]
 func (h *UserHandler) SubPayment(c *gin.Context) {
 	userIDstr := c.Param("userID")
 	userID, err := strconv.ParseUint(userIDstr, 10, 64)

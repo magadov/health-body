@@ -23,23 +23,11 @@ func (h *BmiHandler) RegisterRoutes(r *gin.Engine) {
 	}
 }
 
-// BmiValues godoc
-// @Description Входные данные для расчёта BMI
 type BmiValues struct {
 	Weigth float64 `json:"weigth"`
 	Heigth float64 `json:"heigth"`
 }
 
-// BmiInput godoc
-// @Summary Расчёт индекса массы тела (BMI)
-// @Description Принимает вес (кг) и рост (см), возвращает категорию и BMI
-// @Tags BMI
-// @Accept json
-// @Produce json
-// @Param data body BmiValues true "Данные для BMI"
-// @Success 200 {object} map[string]interface{} "Успешный расчёт"
-// @Failure 400 {object} map[string]string "Некорректный ввод"
-// @Router /bmi/ [post]
 func (h *BmiHandler) BmiInput(r *gin.Context) {
 	var input BmiValues
 

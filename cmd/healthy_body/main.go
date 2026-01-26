@@ -24,7 +24,6 @@ func main() {
 	db := config.SetUpDatabaseConnection()
 	server := gin.Default()
 
-	// 🚀 ВКЛЮЧАЕМ CORS — ЭТО ГЛАВНОЕ
 	server.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"http://localhost:5173"},
 		AllowMethods:     []string{"GET", "POST", "PATCH", "PUT", "DELETE"},
@@ -89,9 +88,3 @@ func main() {
 		reviewsService,
 	)
 
-	server.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
-	if err := server.Run(":8888"); err != nil {
-		log.Fatalf("не удалось запустить HTTP-сервер: %v", err)
-	}
-}

@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// ExercisePlanResponse используется в Swagger как безопасный ответ без gorm.Model
 type ExercisePlanResponse struct {
 	ID            uint   `json:"id"`
 	Name          string `json:"name"`
@@ -48,17 +47,6 @@ func (h *ExercisePlanHandler) RegisterRoutes(r *gin.Engine) {
 	}
 }
 
-// CreatePlan godoc
-// @Summary Создание тренировочного плана
-// @Description Создаёт новый тренировочный план
-// @Tags ExercisePlan
-// @Accept json
-// @Produce json
-// @Param plan body models.CreateExercesicePlanRequest true "Данные тренировочного плана"
-// @Success 200 {object} ExercisePlanResponse
-// @Failure 400 {object} map[string]string
-// @Failure 500 {object} map[string]string
-// @Router /plan/ [post]
 func (h *ExercisePlanHandler) CreatePlan(c *gin.Context) {
 	var inputPlan models.CreateExercesicePlanRequest
 
@@ -79,14 +67,6 @@ func (h *ExercisePlanHandler) CreatePlan(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, plan)
 }
 
-// GetByID godoc
-// @Summary Получить тренировочный план по ID
-// @Tags ExercisePlan
-// @Produce json
-// @Param id path int true "ID плана"
-// @Success 200 {object} ExercisePlanResponse
-// @Failure 400 {object} map[string]string
-// @Router /plan/{id} [get]
 func (h *ExercisePlanHandler) GetByID(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
@@ -107,13 +87,6 @@ func (h *ExercisePlanHandler) GetByID(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, plan)
 }
 
-// GetAllPlan godoc
-// @Summary Получить список тренировочных планов
-// @Tags ExercisePlan
-// @Produce json
-// @Success 200 {array} ExercisePlanResponse
-// @Failure 400 {object} map[string]string
-// @Router /plan/ [get]
 func (h *ExercisePlanHandler) GetAllPlan(c *gin.Context) {
 	list, err := h.exer.GetListPlans()
 	if err != nil {
@@ -126,16 +99,6 @@ func (h *ExercisePlanHandler) GetAllPlan(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, list)
 }
 
-// UpdatePlan godoc
-// @Summary Обновить тренировочный план
-// @Tags ExercisePlan
-// @Accept json
-// @Produce json
-// @Param id path int true "ID плана"
-// @Param plan body models.UpdateExercesicePlanRequest true "Обновлённые данные"
-// @Success 200 {object} ExercisePlanResponse
-// @Failure 400 {object} map[string]string
-// @Router /plan/{id} [patch]
 func (h *ExercisePlanHandler) UpdatePlan(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
@@ -164,14 +127,6 @@ func (h *ExercisePlanHandler) UpdatePlan(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, plan)
 }
 
-// DeletePlan godoc
-// @Summary Удалить тренировочный план
-// @Tags ExercisePlan
-// @Produce json
-// @Param id path int true "ID плана"
-// @Success 200 {object} map[string]bool
-// @Failure 400 {object} map[string]string
-// @Router /plan/{id} [delete]
 func (h *ExercisePlanHandler) DeletePlan(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
@@ -191,16 +146,6 @@ func (h *ExercisePlanHandler) DeletePlan(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, gin.H{"deleted": true})
 }
 
-// CreatePlanItem godoc
-// @Summary Создать упражнение в плане
-// @Tags ExercisePlanItem
-// @Accept json
-// @Produce json
-// @Param item body models.CreateExercisePlanItemRequest true "Данные элемента плана"
-// @Success 200 {object} models.ExercisePlanItem
-// @Failure 400 {object} map[string]string
-// @Failure 500 {object} map[string]string
-// @Router /plan/planItem [post]
 func (h *ExercisePlanHandler) CreatePlanItem(c *gin.Context) {
 	var inputPlanItem models.CreateExercisePlanItemRequest
 
@@ -221,14 +166,6 @@ func (h *ExercisePlanHandler) CreatePlanItem(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, plan)
 }
 
-// GetPlanItemByID godoc
-// @Summary Получить элемент плана по ID
-// @Tags ExercisePlanItem
-// @Produce json
-// @Param id path int true "ID элемента плана"
-// @Success 200 {object} models.ExercisePlanItem
-// @Failure 400 {object} map[string]string
-// @Router /plan/planItem/{id} [get]
 func (h *ExercisePlanHandler) GetPlanItemByID(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
@@ -249,13 +186,6 @@ func (h *ExercisePlanHandler) GetPlanItemByID(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, plan)
 }
 
-// GetListPlanItem godoc
-// @Summary Получить список элементов плана
-// @Tags ExercisePlanItem
-// @Produce json
-// @Success 200 {array} models.ExercisePlanItem
-// @Failure 400 {object} map[string]string
-// @Router /plan/planItem/ [get]
 func (h *ExercisePlanHandler) GetListPlanItem(c *gin.Context) {
 	list, err := h.exer.GetAllPlanItem()
 	if err != nil {
@@ -268,16 +198,6 @@ func (h *ExercisePlanHandler) GetListPlanItem(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, list)
 }
 
-// UpdatePlanItem godoc
-// @Summary Обновить элемент плана
-// @Tags ExercisePlanItem
-// @Accept json
-// @Produce json
-// @Param id path int true "ID элемента"
-// @Param item body models.UpdateExercisePlanItemRequest true "Обновление"
-// @Success 200 {object} models.ExercisePlanItem
-// @Failure 400 {object} map[string]string
-// @Router /plan/planItem/{id} [patch]
 func (h *ExercisePlanHandler) UpdatePlanItem(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
@@ -306,14 +226,6 @@ func (h *ExercisePlanHandler) UpdatePlanItem(c *gin.Context) {
 	c.IndentedJSON(http.StatusOK, plan)
 }
 
-// DeletePlanItem godoc
-// @Summary Удалить элемент плана
-// @Tags ExercisePlanItem
-// @Produce json
-// @Param id path int true "ID элемента"
-// @Success 200 {object} map[string]bool
-// @Failure 400 {object} map[string]string
-// @Router /plan/planItem/{id} [delete]
 func (h *ExercisePlanHandler) DeletePlanItem(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)

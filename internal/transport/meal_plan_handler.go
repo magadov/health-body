@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// MealPlanResponse используется в Swagger как безопасный ответ без gorm.Model
 type MealPlanResponse struct {
 	ID           uint   `json:"id"`
 	Name         string `json:"name"`
@@ -42,14 +41,6 @@ func (h *MealPlanHandler) RegisterRoutes(r *gin.Engine) {
 	}
 }
 
-// @Summary Create Meal Plan
-// @Tags MealPlans
-// @Accept json
-// @Produce json
-// @Param mealPlan body models.CreateMealPlanRequest true "Meal Plan Data"
-// @Success 200 {object} MealPlanResponse
-// @Failure 400 {object} map[string]string
-// @Router /mealPlans/ [post]
 func (h *MealPlanHandler) Create(c *gin.Context) {
 	var req models.CreateMealPlanRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -67,12 +58,6 @@ func (h *MealPlanHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusOK, mealPlan)
 }
 
-// @Summary Get All Meal Plans
-// @Tags MealPlans
-// @Produce json
-// @Success 200 {array} MealPlanResponse
-// @Failure 400 {object} map[string]string
-// @Router /mealPlans/ [get]
 func (h *MealPlanHandler) GetAllMealPlans(c *gin.Context) {
 	mealPlans, err := h.mealPlans.ListMealPlan()
 	if err != nil {
@@ -85,15 +70,6 @@ func (h *MealPlanHandler) GetAllMealPlans(c *gin.Context) {
 	c.JSON(http.StatusOK, mealPlans)
 }
 
-// @Summary Update Meal Plan
-// @Tags MealPlans
-// @Accept json
-// @Produce json
-// @Param id path int true "Meal Plan ID"
-// @Param mealPlan body models.UpdateMealPlanRequest true "Update data"
-// @Success 200 {object} MealPlanResponse
-// @Failure 400 {object} map[string]string
-// @Router /mealPlans/{id} [patch]
 func (h *MealPlanHandler) Update(c *gin.Context) {
 	idStr := c.Param("id")
 
@@ -123,12 +99,6 @@ func (h *MealPlanHandler) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, mealPlan)
 }
 
-// @Summary Delete Meal Plan
-// @Tags MealPlans
-// @Param id path int true "Meal Plan ID"
-// @Success 200 {object} map[string]string
-// @Failure 400 {object} map[string]string
-// @Router /mealPlans/{id} [delete]
 func (h *MealPlanHandler) Delete(c *gin.Context) {
 	idStr := c.Param("id")
 
@@ -148,13 +118,6 @@ func (h *MealPlanHandler) Delete(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "план успешно удалён"})
 }
 
-// @Summary Get Meal Plan By ID
-// @Tags MealPlans
-// @Produce json
-// @Param id path int true "Meal Plan ID"
-// @Success 200 {object} MealPlanResponse
-// @Failure 400 {object} map[string]string
-// @Router /mealPlans/{id} [get]
 func (h *MealPlanHandler) GetMealPlanByID(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)

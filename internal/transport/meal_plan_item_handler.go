@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// MealPlanItemResponse используется для Swagger без gorm.Model
 type MealPlanItemResponse struct {
 	ID          uint    `json:"id"`
 	Name        string  `json:"name"`
@@ -33,7 +32,6 @@ func NewMealPlanItemHandler(mealPlanItems service.MealPlanItemsService, logger *
 	}
 }
 
-// RegisterRoutes регистрирует маршруты
 func (h *MealPlanItemHandler) RegisterRoutes(r *gin.Engine) {
 	mealPlanItems := r.Group("/mealPlanItems")
 	{
@@ -45,16 +43,6 @@ func (h *MealPlanItemHandler) RegisterRoutes(r *gin.Engine) {
 	}
 }
 
-// Create godoc
-// @Summary Создать элемент плана питания
-// @Description Создает новый MealPlanItem
-// @Tags MealPlanItems
-// @Accept json
-// @Produce json
-// @Param mealPlanItem body models.CreateMealPlanItemRequest true "Данные для создания"
-// @Success 200 {object} MealPlanItemResponse
-// @Failure 400 {object} map[string]string
-// @Router /mealPlanItems/ [post]
 func (h *MealPlanItemHandler) Create(c *gin.Context) {
 	var req models.CreateMealPlanItemRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -72,14 +60,6 @@ func (h *MealPlanItemHandler) Create(c *gin.Context) {
 	c.JSON(http.StatusOK, mealPlanItem)
 }
 
-// ListMealPlanItems godoc
-// @Summary Получить список всех элементов плана питания
-// @Description Возвращает массив MealPlanItem
-// @Tags MealPlanItems
-// @Produce json
-// @Success 200 {array} MealPlanItemResponse
-// @Failure 400 {object} map[string]string
-// @Router /mealPlanItems/ [get]
 func (h *MealPlanItemHandler) ListMealPlanItems(c *gin.Context) {
 	mealPlanItems, err := h.mealPlanItems.GetAllMealPlanItems()
 	if err != nil {
@@ -92,17 +72,6 @@ func (h *MealPlanItemHandler) ListMealPlanItems(c *gin.Context) {
 	c.JSON(http.StatusOK, mealPlanItems)
 }
 
-// Update godoc
-// @Summary Обновить элемент плана питания
-// @Description Обновляет MealPlanItem по ID
-// @Tags MealPlanItems
-// @Accept json
-// @Produce json
-// @Param id path int true "ID элемента"
-// @Param mealPlanItem body models.UpdateMealPlanItemRequest true "Данные для обновления"
-// @Success 200 {object} MealPlanItemResponse
-// @Failure 400 {object} map[string]string
-// @Router /mealPlanItems/{id} [patch]
 func (h *MealPlanItemHandler) Update(c *gin.Context) {
 	idStr := c.Param("id")
 
@@ -132,15 +101,6 @@ func (h *MealPlanItemHandler) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, mealPlanItem)
 }
 
-// GetMealPlanItemById godoc
-// @Summary Получить элемент плана питания по ID
-// @Description Возвращает MealPlanItem по ID
-// @Tags MealPlanItems
-// @Produce json
-// @Param id path int true "ID элемента"
-// @Success 200 {object} MealPlanItemResponse
-// @Failure 400 {object} map[string]string
-// @Router /mealPlanItems/{id} [get]
 func (h *MealPlanItemHandler) GetMealPlanItemById(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
@@ -161,15 +121,6 @@ func (h *MealPlanItemHandler) GetMealPlanItemById(c *gin.Context) {
 	c.JSON(http.StatusOK, mealPlanItem)
 }
 
-// DeleteMealPlanItem godoc
-// @Summary Удалить элемент плана питания
-// @Description Удаляет MealPlanItem по ID
-// @Tags mealPlanItems
-// @Produce json
-// @Param id path int true "ID элемента"
-// @Success 200 {object} map[string]string
-// @Failure 400 {object} map[string]string
-// @Router /mealPlanItems/{id} [delete]
 func (h *MealPlanItemHandler) DeleteMealPlanItem(c *gin.Context) {
 	idStr := c.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)

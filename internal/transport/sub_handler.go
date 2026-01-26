@@ -10,7 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// SubscriptionResponse используется в Swagger как безопасный ответ без gorm.Model
 type SubscriptionResponse struct {
 	ID           uint   `json:"id"`
 	Name         string `json:"name"`
@@ -43,17 +42,6 @@ func (h *SubscriptionHandler) RegisterRoutes(r *gin.Engine) {
 	}
 }
 
-// CreateSub godoc
-// @Summary Создать подписку
-// @Description Создает новую подписку
-// @Tags Subscription
-// @Accept json
-// @Produce json
-// @Param subscription body models.CreateSubscriptionRequest true "Данные для создания подписки"
-// @Success 200 {object} SubscriptionResponse
-// @Failure 400 {object} map[string]string
-// @Failure 500 {object} map[string]string
-// @Router /sub/ [post]
 func (h *SubscriptionHandler) CreateSub(r *gin.Context) {
 	var inputSub models.CreateSubscriptionRequest
 	if err := r.ShouldBindJSON(&inputSub); err != nil {
@@ -73,16 +61,6 @@ func (h *SubscriptionHandler) CreateSub(r *gin.Context) {
 	r.IndentedJSON(http.StatusOK, sub)
 }
 
-// GetByID godoc
-// @Summary Получить подписку по ID
-// @Description Возвращает подписку по указанному ID
-// @Tags Subscription
-// @Produce json
-// @Param id path int true "ID подписки"
-// @Success 200 {object} SubscriptionResponse
-// @Failure 400 {object} map[string]string
-// @Failure 500 {object} map[string]string
-// @Router /sub/{id} [get]
 func (h *SubscriptionHandler) GetByID(r *gin.Context) {
 	idStr := r.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
@@ -103,14 +81,6 @@ func (h *SubscriptionHandler) GetByID(r *gin.Context) {
 	r.IndentedJSON(http.StatusOK, sub)
 }
 
-// GetListSub godoc
-// @Summary Получить список подписок
-// @Description Возвращает все подписки
-// @Tags Subscription
-// @Produce json
-// @Success 200 {array} SubscriptionResponse
-// @Failure 500 {object} map[string]string
-// @Router /sub/ [get]
 func (h *SubscriptionHandler) GetListSub(r *gin.Context) {
 	list, err := h.sub.GetListSub()
 	if err != nil {
@@ -123,17 +93,6 @@ func (h *SubscriptionHandler) GetListSub(r *gin.Context) {
 	r.IndentedJSON(http.StatusOK, list)
 }
 
-// Update godoc
-// @Summary Обновить подписку
-// @Description Обновляет подписку по ID
-// @Tags Subscription
-// @Accept json
-// @Produce json
-// @Param id path int true "ID подписки"
-// @Param subscription body models.UpdateSubscriptionRequest true "Данные для обновления подписки"
-// @Success 200 {object} SubscriptionResponse
-// @Failure 400 {object} map[string]string
-// @Router /sub/{id} [patch]
 func (h *SubscriptionHandler) Update(r *gin.Context) {
 	idStr := r.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
@@ -161,15 +120,6 @@ func (h *SubscriptionHandler) Update(r *gin.Context) {
 	r.IndentedJSON(http.StatusOK, sub)
 }
 
-// Delete godoc
-// @Summary Удалить подписку
-// @Description Удаляет подписку по ID
-// @Tags subscription
-// @Produce json
-// @Param id path int true "ID подписки"
-// @Success 200 {object} map[string]bool
-// @Failure 400 {object} map[string]string
-// @Router /sub/{id} [delete]
 func (h *SubscriptionHandler) Delete(r *gin.Context) {
 	idStr := r.Param("id")
 	id, err := strconv.ParseUint(idStr, 10, 64)
