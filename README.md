@@ -15,62 +15,42 @@ Backend API для платформы здорового образа жизни
 ![Swagger](https://img.shields.io/badge/Swagger-API%20Docs-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
 ![gomail](https://img.shields.io/badge/gomail-Email-FF6B6B?style=for-the-badge)
 
-## Архитектура
+                    HTTP
+┌────────┐ ───────────────────────────────┐
+│ Client │                                │
+└────────┘                                v
 
-```
-             HTTP      ┌───────────────────┐
-┌────────┐ ──────────> │  API Gateway      │
-│ Client │             │   (Gin Router)     │
-└────────┘             └─────────┬─────────┘
-                                  │
-           ┌──────────────────────┼──────────────────────┐
-           │                      │                      │
-           v                      v                      v
-    ┌──────────────┐      ┌──────────────┐      ┌──────────────┐
-    │    User      │      │   Exercise   │      │    Meal      │
-    │   Service    │      │ Plan Service │      │ Plan Service │
-    └──────┬───────┘      └──────┬───────┘      └──────┬───────┘
-           │                     │                     │
-           │ HTTP                │ HTTP                │ HTTP
-           │ (get categories,    │ (get categories)    │ (get categories)
-           │  subscriptions)     │                     │
-           v                     v                     v
-    ┌──────────────┐      ┌──────────────┐      ┌──────────────┐
-    │ Subscription │      │   Reviews    │      │   Category   │
-    │   Service    │      │   Service    │      │   Service    │
-    └──────┬───────┘      └──────┬───────┘      └──────┬───────┘
-           │                     │                     │
-           │                     │                     │
-           └─────────────────────┼─────────────────────┘
-                                 │
-                                 v
-                          ┌──────────────┐
-                          │     BMI      │
-                          │   Service    │
-                          └──────────────┘
-                                 │
-                                 │
-                    ┌────────────┼────────────┐
-                    │            │            │
-                    v            v            v
               ┌─────────────────────────────────┐
-              │         PostgreSQL               │
-              │      (GORM + AutoMigrate)        │
-              │                                  │
-              │  Users, Categories, Plans,       │
-              │  Subscriptions, Reviews          │
+              │        Presentation Layer       │
+              │        (Gin Handlers/API)       │
+              └───────────────┬─────────────────┘
+                              │
+                              v
+              ┌─────────────────────────────────┐
+              │         Business Layer          │
+              │                                 │
+              │  User Service                   │
+              │  Exercise Plan Service          │
+              │  Meal Plan Service              │
+              │  Subscription Service           │
+              │  Reviews Service                │
+              │  Category Service               │
+              │  BMI Service                    │
+              │  Notification Service           │
+              └───────────────┬─────────────────┘
+                              │
+                              v
+              ┌─────────────────────────────────┐
+              │          Data Layer             │
+              │     (Repositories / GORM)       │
+              └───────────────┬─────────────────┘
+                              │
+                              v
+              ┌─────────────────────────────────┐
+              │           PostgreSQL            │
+              │   Users, Plans, Reviews, etc.   │
               └─────────────────────────────────┘
-                    │            │            │
-                    └────────────┼────────────┘
-                                 │
-                                 │ HTTP
-                                 │ (send email notifications)
-                                 v
-                          ┌──────────────┐
-                          │ Notification │
-                          │   Service    │
-                          │   (Email)     │
-                          └──────────────┘
+
 ```
 
 ## Основные возможности
