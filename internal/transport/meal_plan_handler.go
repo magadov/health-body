@@ -55,7 +55,7 @@ func (h *MealPlanHandler) Create(c *gin.Context) {
 		return
 	}
 	h.logger.Info("handler: meal plan created successfully")
-	c.JSON(http.StatusOK, mealPlan)
+	c.JSON(http.StatusCreated, mealPlan)
 }
 
 func (h *MealPlanHandler) GetAllMealPlans(c *gin.Context) {

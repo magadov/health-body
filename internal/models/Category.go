@@ -8,8 +8,8 @@ type Categories struct {
 	Description string `json:"description"`
 	Price       int    `json:"price"`
 
-	ExercisePlans []ExercisePlan `json:"exercise_plans"`
-	MealPlans     []MealPlan     `json:"meal_plans"`
+	ExercisePlans []ExercisePlan `json:"exercise_plans" gorm:"foreignKey:CategoryID"`
+	MealPlans     []MealPlan     `json:"meal_plans" gorm:"foreignKey:CategoryID"`
 }
 
 type CreateCategoryRequest struct {
