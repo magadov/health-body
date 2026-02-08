@@ -61,8 +61,8 @@ func (h *MealPlanHandler) Create(c *gin.Context) {
 func (h *MealPlanHandler) GetAllMealPlans(c *gin.Context) {
 	mealPlans, err := h.mealPlans.ListMealPlan()
 	if err != nil {
-		h.logger.Error("failed to fetch meal plans")
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		h.logger.Error("fetch meal plans failed", "err", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
