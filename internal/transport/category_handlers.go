@@ -49,7 +49,9 @@ func (h *CategoryHandler) CreateCategory(c *gin.Context) {
 	cat, err := h.category.CreateCategory(input)
 	if err != nil {
 		h.log.Error("failed to create category", "error", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{
+    "error": "failed to create category",
+	})
 		return
 	}
 
